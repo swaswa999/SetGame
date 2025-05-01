@@ -34,12 +34,10 @@ void showTimer() {
 }
 
 public int timerScore() {
-  // Returns the number of points scored based on the timer, which is
-  // the GREATER of:
-  //    300 minus the number of seconds taken when the game ends
-  //      0
-  //
-  // If it took 277 seconds to finish the game, this should return 23 (300-277=23)
-  // If it took 435 seconds to finish the game, this should return 0 (435 > 300)
-  return 0;
+    // Calculate the total time taken in milliseconds
+    int totalMillis = (int)(runningTimerEnd - runningTimerStart + timeElapsed);
+    // Convert milliseconds to full seconds
+    int totalSeconds = totalMillis / 1000;
+    // Calculate bonus: 300 seconds minus total time, ensuring it's not negative
+    return Math.max(0, 300 - totalSeconds);
 }

@@ -44,38 +44,56 @@ public class Grid {
   //    * The number of cards in play is adjusted as needed
   //    * The board is mutated to reflect removal of the set
   public void removeSet() {
-    // Because it seems to make for a better UX, cards should not change locations unless
-    // the number of columns has decreased.  If that happens, cards from the rightmost
-    // column should be moved to locations where cards that formed the selected set
-    // Put the locations of the selected cells in order.  Cards from the rightmost column
-    // that are part of the set should be removed instead of being migrated.
-    
-    selectedLocs.sort(null);  // Don't delete this line as it orders the selected locations
-                              // You may wish to look up how the Location class decides
-                              // how to compare two different locations.  Also look up the
-                              // documentation on ArrayList to see how sort(null) works
-
-    // YOU WRITE THIS
-  }
+      selectedLocs.sort(null);
   
+      if (cardsInPlay > 12 || deck.size() == 0) {
+          int lastIndex = cardsInPlay - 1;
+          int lastCol = col(lastIndex);
+          int lastRow = row(lastIndex);
+  
+          for (Location loc : selectedLocs) {
+              // If we are already moving a card onto itself, skip (this might happen if the last card is part of selectedLocs)
+              if (lastIndex < loc.getCol() * 3 + loc.getRow()) {
+                  continue;
+              }
+  
+              board[loc.getCol()][loc.getRow()] = board[lastCol][lastRow];
+              board[lastCol][lastRow] = null;
+  
+              lastIndex--;
+              lastCol = col(lastIndex);
+              lastRow = row(lastIndex);
+          }
+  
+          cardsInPlay -= 3;
+      } else {
+          // Deal 3 new cards into these spots
+          for (Location loc : selectedLocs) {
+              board[loc.getCol()][loc.getRow()] = deck.dealFromTop();
+          }
+      }
+  }
   // Precondition: Three cards have been selected by the player
   // Postcondition: Game state, score, game message mutated, selected cards list cleared
   public void processTriple() {
-    if (isSet(selectedCards.get(0), selectedCards.get(1), selectedCards.get(2))) {
-      score += 10;
-      removeSet();
-      if (isGameOver()) {
-        // YOU WRITE THIS
+      if (isSet(selectedCards.get(0), selectedCards.get(1), selectedCards.get(2))) {
+          score += 10;
+          removeSet();
+          if (isGameOver()) {
+              state = State.GAME_OVER;
+              runningTimerEnd = millis();
+              score += timerScore();
+              message = 7; // Assuming 7 indicates "game over" message
+          } else {
+              state = State.PLAYING;
+              message = 1;
+          }
       } else {
-        state = State.PLAYING;
-        message = 1;
+          score -= 5;
+          state = State.PLAYING;
+          message = 2;
       }
-    } else {
-      score -= 5;
-      state = State.PLAYING;
-      message = 2;
-    }
-    clearSelected();
+      clearSelected();
   }
   
   
@@ -165,8 +183,7 @@ public class Grid {
   // GAME PROCEDURES
   
   public boolean isGameOver() {
-    // YOU WRITE THIS
-    return false;
+      return deck.size() == 0 && findSet().isEmpty();
   }
 
   public boolean tripleSelected() {

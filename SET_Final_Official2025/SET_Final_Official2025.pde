@@ -189,7 +189,7 @@ void drawButtons() {
   if (state == State.PAUSED) {
     text("Resume", BUTTON_LEFT_OFFSET+45+3*(BUTTON_WIDTH+12), BUTTON_TOP_OFFSET+22);
   } else {
-    text("Pause", BUTTON_LEFT_OFFSET+54+3*(BUTTON_WIDTH+12), BUTTON_TOP_OFFSET+22);
+    text("Pause", BUTTON_LEFT_OFFSET+54+4*(BUTTON_WIDTH+12), BUTTON_TOP_OFFSET+22);
   }
 }
 
