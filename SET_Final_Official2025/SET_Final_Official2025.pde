@@ -193,22 +193,34 @@ void drawButtons() {
   }
 }
 
+// CHATGPT
 public void newGame() {
-  // Do NOT redeclare existing variables.  For example, when creating a new
-  // deck, you want to write
-  //
-  // deck = WHATEVER_CODE_YOU_PUT_HERE;
-  //
-  // not
-  //
-  // Deck deck = WHATEVER_CODE_YOU_PUT_HERE;
-  //
-  // If you do that, deck becomes local to newGame(), and it won't work properly
-  // outside of the newGame() method.
-  //
-  // Every variable you need has already been created.  Just follow the directions.
+  // 1. Create a new deck
+  deck = new Deck();
 
-  // YOUR_CODE_HERE
+  // 2. Create a new grid
+  grid = new Grid();
+
+  // 3. Set the score to zero
+  score = 0;
+
+  // 4. Set currentCols to 4
+  currentCols = 4;
+
+  // 5. Change the state to State.PLAYING
+  state = State.PLAYING;
+
+  // 6. Set the message to display "Welcome to SET!"
+  message = 0; // Assuming message = 0 corresponds to "Welcome to SET!"
+
+  // 7. Reset the timer
+  timeElapsed = 0;
+  runningTimerStart = millis();
+
+  // 8. Add (currentCols * ROWS) cards to the grid
+  for (int i = 0; i < currentCols * ROWS; i++) {
+    grid.addCardToBoard(deck.deal());
+  }
 }
 
 public void newTestGame() {

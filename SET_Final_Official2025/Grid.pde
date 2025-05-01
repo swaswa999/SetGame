@@ -133,11 +133,32 @@ public class Grid {
   // Postconditions: board has been updated to include the card
   //                the number of cardsInPlay has been increased by one
   public void addCardToBoard(Card card) {
-    // YOU WRITE THIS
+      int col = cardsInPlay / ROWS;
+      int row = cardsInPlay % ROWS;
+      board[col][row] = card;
+      cardsInPlay++;
   }
     
   public void addColumn() {
-    // YOU WRITE THIS
+    // 1. If the deck is empty, change the message and return
+    if (deck.isEmpty()) {
+      message = 5;  // Assume 5 means "no more cards in deck"
+      return;
+    }
+  
+    // 2. If no set is on the board
+    if (findSet().isEmpty()) {
+      score += 5;
+      for (int i = 0; i < 3 && !deck.isEmpty(); i++) {
+        addCardToBoard(deck.remove(0));
+      }
+      message = 3;  // Assume 3 means "cards added to board"
+    } 
+    // 3. If a set is present
+    else {
+      score -= 5;
+      message = 4;  // Assume 4 means "set already on board"
+    }
   }
 
   
