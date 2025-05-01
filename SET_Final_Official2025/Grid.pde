@@ -141,23 +141,23 @@ public class Grid {
     
   public void addColumn() {
     // 1. If the deck is empty, change the message and return
-    if (deck.isEmpty()) {
-      message = 5;  // Assume 5 means "no more cards in deck"
+    if (deck.size() == 0) {
+      message = 5;  // Assume 5 indicates "no more cards in deck"
       return;
     }
   
     // 2. If no set is on the board
     if (findSet().isEmpty()) {
       score += 5;
-      for (int i = 0; i < 3 && !deck.isEmpty(); i++) {
-        addCardToBoard(deck.remove(0));
+      for (int i = 0; i < 3 && deck.size() > 0; i++) {
+        addCardToBoard(deck.dealFromTop());
       }
-      message = 3;  // Assume 3 means "cards added to board"
+      message = 3;  // Assume 3 indicates "cards added to board"
     } 
     // 3. If a set is present
     else {
       score -= 5;
-      message = 4;  // Assume 4 means "set already on board"
+      message = 4;  // Assume 4 indicates "set already on board"
     }
   }
 
