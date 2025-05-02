@@ -96,7 +96,6 @@ public class Grid {
       clearSelected();
   }
   
-  
   // DISPLAY CODE
   
   public void display() {
