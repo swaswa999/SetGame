@@ -1,4 +1,5 @@
 PImage cimg;
+//by Ethan and Swayam using ChatGPT
 // For extracting pieces of the image at http://clojure.paris/resources/public/imgs/all-cards.png;
 // The original website may be defunct now
 public final int SHEET_LENGTH = 9;   // Number of cards in a row (or column) on the sheet
