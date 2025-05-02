@@ -1,5 +1,12 @@
 PImage cimg;
 //by Ethan and Swayam using ChatGPT :D
+
+//things that are cooked (BUGS)
+//1) im pretty sure that the cards are being drawn in the order they appear on the sheet, which is why we consistantly keep getting the same combonation combinations
+//2) the code just crashes at some point in endgame (im assuming its when you run out of cards to draw?)
+//3) adding additional rows of cards doesnt work (you cant click on them)
+//4) there is apparently no limit to how many cards you can technically add, so when your table is full but u keep adding cards, it crashes [FIXED]
+
 // For extracting pieces of the image at http://clojure.paris/resources/public/imgs/all-cards.png;
 // The original website may be defunct now
 public final int SHEET_LENGTH = 9;   // Number of cards in a row (or column) on the sheet

@@ -76,9 +76,11 @@ public class Grid {
   // Precondition: Three cards have been selected by the player
   // Postcondition: Game state, score, game message mutated, selected cards list cleared
   public void processTriple() {
+    // if three selected cards form a set, add 10 points, then remove the set
       if (isSet(selectedCards.get(0), selectedCards.get(1), selectedCards.get(2))) {
           score += 10;
           removeSet();
+          //if the game is over, set the state to GAME_OVER
           if (isGameOver()) {
               state = State.GAME_OVER;
               runningTimerEnd = millis();
@@ -162,9 +164,14 @@ public class Grid {
       message = 5;  // Assume 5 indicates "no more cards in deck"
       return;
     }
+    // 2. ADDITIONAL CONDITION? if there are currently the max amt of cards on the board
+    if (cardsInPlay >= 21)
+    {
+      message = 7;
+    }
   
     // 2. If no set is on the board
-    if (findSet().isEmpty()) {
+    else if (findSet().isEmpty()) {
       score += 5;
       for (int i = 0; i < 3 && deck.size() > 0; i++) {
         addCardToBoard(deck.dealFromTop());
@@ -183,10 +190,12 @@ public class Grid {
   
   public boolean isGameOver() {
       return deck.size() == 0 && findSet().isEmpty();
+      // there are no cards left in the deck and there are no more possible sets that can be made
   }
 
   public boolean tripleSelected() {
     return (selectedLocs.size() == 3);
+      // checks if 3 cards are selected
   }
    
   // Preconditions: --
