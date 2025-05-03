@@ -43,36 +43,44 @@ public class Grid {
   //    * The number of columns is adjusted as needed to reflect removal of the set
   //    * The number of cards in play is adjusted as needed
   //    * The board is mutated to reflect removal of the set
+  
   public void removeSet() {
-    if (selectedLocs.size() != 3) return;  // <-- Safety check
-  
-    selectedLocs.sort(null);
-  
-    if (cardsInPlay > 12 || deck.size() == 0) {
-      int lastIndex = cardsInPlay - 1;
-      int lastCol = col(lastIndex);
-      int lastRow = row(lastIndex);
-  
-      for (Location loc : selectedLocs) {
-        if (lastIndex < loc.getCol() * 3 + loc.getRow()) continue;
-  
-        board[loc.getCol()][loc.getRow()] = board[lastCol][lastRow];
-        board[lastCol][lastRow] = null;
-  
-        lastIndex--;
-        lastCol = col(lastIndex);
-        lastRow = row(lastIndex);
-      }
-  
-      cardsInPlay -= 3;
-    } else {
-      for (Location loc : selectedLocs) {
-        if (deck.size() > 0) {  // <-- Safety check
-          board[loc.getCol()][loc.getRow()] = deck.dealFromTop();
-        }
+  // Safety check: only proceed if exactly 3 cards are selected
+  if (selectedLocs.size() != 3) return;
+
+  // Sort selected locations to make handling cleaner
+  selectedLocs.sort(null);
+
+  // Case 1: No cards left in the deck OR more than 12 cards on the board
+  if (cardsInPlay > 12 || deck.size() == 0) {
+    int lastIndex = cardsInPlay - 1;
+    int lastCol = col(lastIndex);
+    int lastRow = row(lastIndex);
+
+    for (Location loc : selectedLocs) {
+      // Avoid moving a card onto itself
+      if (lastIndex < loc.getCol() * ROWS + loc.getRow()) continue;
+
+      board[loc.getCol()][loc.getRow()] = board[lastCol][lastRow];
+      board[lastCol][lastRow] = null;
+
+      lastIndex--;
+      lastCol = col(lastIndex);
+      lastRow = row(lastIndex);
+    }
+
+    cardsInPlay -= 3;
+    currentCols--;  // ✅ Decrease the number of columns
+
+  } else {
+    // Case 2: Deal 3 new cards into the selected locations
+    for (Location loc : selectedLocs) {
+      if (deck.size() > 0) {
+        board[loc.getCol()][loc.getRow()] = deck.dealFromTop();
       }
     }
   }
+}
 
   // Precondition: Three cards have been selected by the player
   // Postcondition: Game state, score, game message mutated, selected cards list cleared
@@ -171,7 +179,7 @@ public class Grid {
   
     if (cardsInPlay >= 21) {
       message = 7;
-      return;  // <-- Added to prevent continuing
+      return;
     }
   
     if (findSet().isEmpty()) {
@@ -179,6 +187,8 @@ public class Grid {
       for (int i = 0; i < 3 && deck.size() > 0; i++) {
         addCardToBoard(deck.dealFromTop());
       }
+  
+      currentCols++;  // ✅ Make sure this line exists
       message = 3;
     } else {
       score -= 5;
