@@ -44,59 +44,64 @@ public class Grid {
   //    * The number of cards in play is adjusted as needed
   //    * The board is mutated to reflect removal of the set
   public void removeSet() {
-      selectedLocs.sort(null);
+    if (selectedLocs.size() != 3) return;  // <-- Safety check
   
-      if (cardsInPlay > 12 || deck.size() == 0) {
-          int lastIndex = cardsInPlay - 1;
-          int lastCol = col(lastIndex);
-          int lastRow = row(lastIndex);
+    selectedLocs.sort(null);
   
-          for (Location loc : selectedLocs) {
-              // If we are already moving a card onto itself, skip (this might happen if the last card is part of selectedLocs)
-              if (lastIndex < loc.getCol() * 3 + loc.getRow()) {
-                  continue;
-              }
+    if (cardsInPlay > 12 || deck.size() == 0) {
+      int lastIndex = cardsInPlay - 1;
+      int lastCol = col(lastIndex);
+      int lastRow = row(lastIndex);
   
-              board[loc.getCol()][loc.getRow()] = board[lastCol][lastRow];
-              board[lastCol][lastRow] = null;
+      for (Location loc : selectedLocs) {
+        if (lastIndex < loc.getCol() * 3 + loc.getRow()) continue;
   
-              lastIndex--;
-              lastCol = col(lastIndex);
-              lastRow = row(lastIndex);
-          }
+        board[loc.getCol()][loc.getRow()] = board[lastCol][lastRow];
+        board[lastCol][lastRow] = null;
   
-          cardsInPlay -= 3;
-      } else {
-          // Deal 3 new cards into these spots
-          for (Location loc : selectedLocs) {
-              board[loc.getCol()][loc.getRow()] = deck.dealFromTop();
-          }
+        lastIndex--;
+        lastCol = col(lastIndex);
+        lastRow = row(lastIndex);
       }
+  
+      cardsInPlay -= 3;
+    } else {
+      for (Location loc : selectedLocs) {
+        if (deck.size() > 0) {  // <-- Safety check
+          board[loc.getCol()][loc.getRow()] = deck.dealFromTop();
+        }
+      }
+    }
   }
+
   // Precondition: Three cards have been selected by the player
   // Postcondition: Game state, score, game message mutated, selected cards list cleared
+  
   public void processTriple() {
-    // if three selected cards form a set, add 10 points, then remove the set
-      if (isSet(selectedCards.get(0), selectedCards.get(1), selectedCards.get(2))) {
-          score += 10;
-          removeSet();
-          //if the game is over, set the state to GAME_OVER
-          if (isGameOver()) {
-              state = State.GAME_OVER;
-              runningTimerEnd = millis();
-              score += timerScore();
-              message = 7; // Assuming 7 indicates "game over" message
-          } else {
-              state = State.PLAYING;
-              message = 1;
-          }
+    if (selectedCards.size() != 3) return;  // <-- Safety check
+  
+    if (isSet(selectedCards.get(0), selectedCards.get(1), selectedCards.get(2))) {
+      score += 10;
+      removeSet();
+  
+      if (isGameOver()) {
+        state = State.GAME_OVER;
+        runningTimerEnd = millis();
+        score += timerScore();
+        message = 7;
       } else {
-          score -= 5;
-          state = State.PLAYING;
-          message = 2;
+        state = State.PLAYING;
+        message = 1;
       }
-      clearSelected();
+    } else {
+      score -= 5;
+      state = State.PLAYING;
+      message = 2;
+    }
+  
+    clearSelected();
   }
+
   
   // DISPLAY CODE
   
@@ -159,29 +164,25 @@ public class Grid {
   }
     
   public void addColumn() {
-    // 1. If the deck is empty, change the message and return
     if (deck.size() == 0) {
-      message = 5;  // Assume 5 indicates "no more cards in deck"
+      message = 5;
       return;
     }
-    // 2. ADDITIONAL CONDITION? if there are currently the max amt of cards on the board
-    if (cardsInPlay >= 21)
-    {
+  
+    if (cardsInPlay >= 21) {
       message = 7;
+      return;  // <-- Added to prevent continuing
     }
   
-    // 2. If no set is on the board
-    else if (findSet().isEmpty()) {
+    if (findSet().isEmpty()) {
       score += 5;
       for (int i = 0; i < 3 && deck.size() > 0; i++) {
         addCardToBoard(deck.dealFromTop());
       }
-      message = 3;  // Assume 3 indicates "cards added to board"
-    } 
-    // 3. If a set is present
-    else {
+      message = 3;
+    } else {
       score -= 5;
-      message = 4;  // Assume 4 indicates "set already on board"
+      message = 4;
     }
   }
 

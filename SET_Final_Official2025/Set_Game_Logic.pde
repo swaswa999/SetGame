@@ -70,6 +70,7 @@ boolean diffCount(Card a, Card b, Card c) {
 }
 
 boolean isSet(Card a, Card b, Card c) {
+  if (a == null || b == null || c == null) return false;
   return (sameColor(a, b, c) || diffColor(a, b, c)) &&
          (sameShape(a, b, c) || diffShape(a, b, c)) &&
          (sameFill(a, b, c) || diffFill(a, b, c)) &&
