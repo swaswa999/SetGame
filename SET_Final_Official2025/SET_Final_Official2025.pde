@@ -1,10 +1,10 @@
 PImage cimg;
-//by Ethan and Swayam using ChatGPT :D
+//by Ethan and Swayam using some ChatGPT
 
 //things that are cooked (BUGS)
 //1) im pretty sure that the cards are being drawn in the order they appear on the sheet, which is why we consistantly keep getting the same combonation combinations
-//2) the code just crashes at some point in endgame (im assuming its when you run out of cards to draw?)
-//3) adding additional rows of cards doesnt work (you cant click on them)
+//2) the code just crashes at some point in endgame (im assuming its when you run out of cards to draw?) [FIXED]
+//3) adding additional rows of cards doesnt work (you cant click on them) [FIXED]
 //4) there is apparently no limit to how many cards you can technically add, so when your table is full but u keep adding cards, it crashes [FIXED]
 
 // For extracting pieces of the image at http://clojure.paris/resources/public/imgs/all-cards.png;
@@ -195,7 +195,7 @@ void drawButtons() {
   text("Test Deck", BUTTON_LEFT_OFFSET+18+3*(BUTTON_WIDTH+12), BUTTON_TOP_OFFSET+22); 
 
   if (state == State.PAUSED) {
-    text("Resume", BUTTON_LEFT_OFFSET+45+3*(BUTTON_WIDTH+12), BUTTON_TOP_OFFSET+22);
+    text("Resume", BUTTON_LEFT_OFFSET+45+4*(BUTTON_WIDTH+12), BUTTON_TOP_OFFSET+22);
   } else {
     text("Pause", BUTTON_LEFT_OFFSET+54+4*(BUTTON_WIDTH+12), BUTTON_TOP_OFFSET+22);
   }

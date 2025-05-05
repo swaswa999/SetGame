@@ -76,7 +76,7 @@ public class Grid {
     // Case 2: Deal 3 new cards into the selected locations
     for (Location loc : selectedLocs) {
       if (deck.size() > 0) {
-        board[loc.getCol()][loc.getRow()] = deck.dealFromTop();
+        board[loc.getCol()][loc.getRow()] = deck.deal();
       }
     }
   }
@@ -185,7 +185,7 @@ public class Grid {
     if (findSet().isEmpty()) {
       score += 5;
       for (int i = 0; i < 3 && deck.size() > 0; i++) {
-        addCardToBoard(deck.dealFromTop());
+        addCardToBoard(deck.deal());
       }
   
       currentCols++;  // ✅ Make sure this line exists
